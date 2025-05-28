@@ -1,0 +1,6 @@
+paho-mqtt
+pybullet
+numpy
+
+
+
