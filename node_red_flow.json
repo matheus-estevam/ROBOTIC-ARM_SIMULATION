@@ -1,4 +1,5 @@
 [
+    // Aba principal do Dashboard no Node-RED
     {
         "id": "a1f4a75b36a1d5e6",
         "type": "tab",
@@ -6,40 +7,54 @@
         "disabled": false,
         "info": ""
     },
+
+    // Nó MQTT que recebe as mensagens do tópico 'robot/status'
     {
         "id": "d9ee35dc6d5b2b58",
         "type": "mqtt in",
-        "z": "a1f4a75b36a1d5e6",
-        "name": "Recebe Status Robô",
-        "topic": "robot/status",
-        "qos": "0",
+        "z": "a1f4a75b36a1d5e6", // Vinculado à aba 'Robot Dashboard'
+        "name": "Recebe Status Robô", // Nome do nó
+        "topic": "robot/status", // Tópico MQTT onde recebe os dados
+        "qos": "0", // Qualidade de serviço MQTT
         "datatype": "auto-detect",
-        "broker": "3652915ca5b624d5",
+        "broker": "3652915ca5b624d5", // Referência ao broker MQTT cadastrado
         "nl": false,
         "rap": true,
         "rh": 0,
         "x": 140,
         "y": 100,
-        "wires": [["a6e7ad408e3cdb96"]]
+        "wires": [["a6e7ad408e3cdb96"]] // Envia para o nó JSON Parse
     },
+
+    // Nó que converte a mensagem JSON recebida em objeto para o Node-RED
     {
         "id": "a6e7ad408e3cdb96",
         "type": "json",
         "z": "a1f4a75b36a1d5e6",
-        "name": "JSON Parse",
-        "property": "payload",
+        "name": "JSON Parse", // Nome do nó
+        "property": "payload", // A propriedade da mensagem que será convertida
         "action": "",
         "pretty": false,
         "x": 340,
         "y": 100,
-        "wires": [["0c9cd7a11b5803f3","d90d3212ce6a91e1","3df5eafc24844fa0","0f5c66e3c31d4d77","47f6e7f3487a3a61"]]
+        "wires": [
+            [
+                "0c9cd7a11b5803f3", // Vai para gauge de posição X
+                "d90d3212ce6a91e1", // Vai para gauge de posição Y
+                "3df5eafc24844fa0", // Vai para gauge de posição Z
+                "0f5c66e3c31d4d77", // Vai para gráfico de força e torque
+                "47f6e7f3487a3a61"  // Vai para texto de status de contato
+            ]
+        ]
     },
+
+    // Gauge que mostra a posição X do robô
     {
         "id": "0c9cd7a11b5803f3",
         "type": "ui_gauge",
         "z": "a1f4a75b36a1d5e6",
         "name": "Posição X",
-        "group": "4f7b8a65b107f8c8",
+        "group": "4f7b8a65b107f8c8", // Grupo do dashboard
         "order": 1,
         "width": 4,
         "height": 4,
@@ -48,15 +63,14 @@
         "label": "metros",
         "format": "{{value}}",
         "min": 0,
-        "max": 1,
-        "colors": ["#00b500","#e6e600","#ca3838"],
-        "seg1": "",
-        "seg2": "",
-        "className": "",
+        "max": 1, // Limites de medição
+        "colors": ["#00b500","#e6e600","#ca3838"], // Verde, amarelo, vermelho
         "x": 600,
         "y": 40,
         "wires": []
     },
+
+    // Gauge da posição Y
     {
         "id": "d90d3212ce6a91e1",
         "type": "ui_gauge",
@@ -73,13 +87,12 @@
         "min": -0.5,
         "max": 0.5,
         "colors": ["#00b500","#e6e600","#ca3838"],
-        "seg1": "",
-        "seg2": "",
-        "className": "",
         "x": 600,
         "y": 100,
         "wires": []
     },
+
+    // Gauge da posição Z
     {
         "id": "3df5eafc24844fa0",
         "type": "ui_gauge",
@@ -96,13 +109,12 @@
         "min": 0,
         "max": 1,
         "colors": ["#00b500","#e6e600","#ca3838"],
-        "seg1": "",
-        "seg2": "",
-        "className": "",
         "x": 600,
         "y": 160,
         "wires": []
     },
+
+    // Gráfico de linha que mostra a evolução de força e torque
     {
         "id": "0f5c66e3c31d4d77",
         "type": "ui_chart",
@@ -112,27 +124,31 @@
         "order": 4,
         "width": 8,
         "height": 4,
-        "label": "Força (N) e Torque (Nm)",
-        "chartType": "line",
-        "legend": "true",
-        "xformat": "HH:mm:ss",
+        "label": "Força (N) e Torque (Nm)", // Título
+        "chartType": "line", // Gráfico de linha
+        "legend": "true", // Mostra legenda
+        "xformat": "HH:mm:ss", // Formato do eixo X (horário)
         "interpolate": "linear",
         "nodata": "",
         "dot": false,
         "ymin": "0",
-        "ymax": "50",
-        "removeOlder": 1,
+        "ymax": "50", // Limite superior do gráfico
+        "removeOlder": 1, // Remove dados antigos após 1 hora
         "removeOlderPoints": "",
         "removeOlderUnit": "3600",
         "cutout": 0,
         "useOneColor": false,
-        "colors": ["#1f77b4","#ff7f0e","#2ca02c","#d62728","#9467bd","#8c564b","#e377c2","#7f7f7f","#bcbd22","#17becf"],
+        "colors": [
+            "#1f77b4", // Cor para força
+            "#ff7f0e"  // Cor para torque
+        ],
         "useOldStyle": false,
-        "className": "",
         "x": 600,
         "y": 220,
         "wires": [[],[]]
     },
+
+    // Texto simples que mostra se há contato (colisão) ou não
     {
         "id": "47f6e7f3487a3a61",
         "type": "ui_text",
@@ -142,23 +158,24 @@
         "width": 4,
         "height": 2,
         "name": "Status de Contato",
-        "label": "Status",
-        "format": "{{msg.payload}}",
+        "label": "Status", // Label que aparece no dashboard
+        "format": "{{msg.payload}}", // Mostra o conteúdo da mensagem
         "layout": "col-center",
-        "className": "",
         "x": 600,
         "y": 280,
         "wires": []
     },
+
+    // Configuração do Broker MQTT (no caso, local)
     {
         "id": "3652915ca5b624d5",
         "type": "mqtt-broker",
         "name": "Local MQTT",
-        "broker": "localhost",
-        "port": "1883",
+        "broker": "localhost", // Broker local
+        "port": "1883", // Porta padrão
         "clientid": "",
-        "usetls": false,
-        "protocolVersion": "4",
+        "usetls": false, // Sem TLS (sem criptografia)
+        "protocolVersion": "4", // MQTT v3.1.1
         "keepalive": "60",
         "cleansession": true,
         "birthTopic": "",
@@ -170,6 +187,8 @@
         "willQos": "0",
         "willPayload": ""
     },
+
+    // Grupo de widgets no Dashboard chamado 'Robot Monitor'
     {
         "id": "4f7b8a65b107f8c8",
         "type": "ui_group",
@@ -177,10 +196,12 @@
         "tab": "d60a445d78c991d7",
         "order": 1,
         "disp": true,
-        "width": 12,
-        "collapse": false,
+        "width": 12, // Largura total do grupo
+        "collapse": false, // Não colapsável
         "className": ""
     },
+
+    // Aba no Dashboard chamada 'Dashboard'
     {
         "id": "d60a445d78c991d7",
         "type": "ui_tab",
